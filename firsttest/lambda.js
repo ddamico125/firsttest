@@ -8,10 +8,12 @@ exports.handler = function (event, context, callback) {
 		if (err) {
 			//handle error
 		} else {
+			console.log(data)
+			const payload = data
 			//your logic goes here
 		}
 	});
 
 
-	callback(null, 'Successfully executed');
+	callback(null, payload);
 }
