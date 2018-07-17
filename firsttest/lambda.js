@@ -1,18 +1,31 @@
 let AWS = require('aws-sdk');
-const ddb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 exports.handler = function (event, context, callback) {
-	ddb.get({
-		TableName: 'test_user_tabel',
-		Key: { 'id': 'id' }
-	}, function (err, data) {
-		if (err) {
-			//handle error
-		} else {
-			console.log(data)
-			const payload = data
-			//your logic goes here
-		}
-	});
+  const params = {
+    TableName: "test_user_tabel",
+    Key: {
+      id: "",
+    },
+  };
+  dynamoDb.get(params, (error, result) => {
+    // handle potential errors
+    if (error) {
+      console.error(error);
+      callback(null, {
+        statusCode: error.statusCode || 501,
+        headers: { 'Content-Type': 'text/plain' },
+        body: 'Couldn\'t fetch the todo item.',
+      });
+      return;
+    }
+
+    // create a response
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(result.Item),
+    };
+    callback(null, response);
+  });
 
 
 	callback(null, payload);
